@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1047050763596",
+    "project_id": "kibun-1623d",
+    "storage_bucket": "kibun-1623d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1047050763596:android:0a3adaadfb080bd8d5e3e9",
+        "android_client_info": {
+          "package_name": "com.pkozuch.kibun"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDscYDxECIT1fj1wW8j2jCCC4sfHprROCs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
