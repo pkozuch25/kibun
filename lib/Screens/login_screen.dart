@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:kibun/Logic/Enums/server_address_enum.dart';
-import 'package:kibun/Logic/Services/color_palette.dart';
+import 'package:kibun/Logic/Services/style.dart';
 import 'package:kibun/Logic/Services/flushbar_service.dart';
 import 'package:kibun/Logic/Services/storage_service.dart';
 import 'package:kibun/ViewModels/email_validator_model.dart';
@@ -68,12 +68,12 @@ class _LoginScreenState extends State<LoginScreen> {
   setState(() {
     SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(
-        systemNavigationBarColor: ColorPalette.orange10
+        systemNavigationBarColor: ColorPalette.black300
       )
     );
   });
 
-  final HttpLink httpLink = HttpLink(ServerAddressEnum.LOCAL1.ipAddress);
+  final HttpLink httpLink = HttpLink(ServerAddressEnum.LOCAL2.ipAddress);
   final ValueNotifier<GraphQLClient> client = ValueNotifier(
       GraphQLClient(
         link: httpLink,
@@ -92,10 +92,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
-                  ColorPalette.orange40,
-                  ColorPalette.orange30,
-                  ColorPalette.orange20,
-                  ColorPalette.orange10,
+                  ColorPalette.black300,
+                  ColorPalette.black400,
+                  ColorPalette.black500,
+                  ColorPalette.black600,
                 ],
               ),
             ),
@@ -105,20 +105,20 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    Text(
+                    const Text(
                       'Welcome Back',
                       style: TextStyle(
-                        fontSize: 36,
+                        fontSize: FontSize.large,
                         fontWeight: FontWeight.bold,
-                        color: ColorPalette.textGrey,
+                        color: ColorPalette.neutralsWhite,
                       ),
                     ),
                     const SizedBox(height: 16),
-                    Text(
+                    const Text(
                       'Please login to continue',
                       style: TextStyle(
-                        fontSize: 18,
-                        color: ColorPalette.textGrey,
+                        fontSize: FontSize.regular,
+                        color: ColorPalette.neutralsWhite,
                       ),
                     ),
                     const SizedBox(height: 40),
@@ -126,10 +126,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       borderSide: BorderSide.none,
                       bottomPadding: 250,
                       controller: _emailController,
-                      inputColor: ColorPalette.textGrey,
-                      labelStyleColor: ColorPalette.textGrey,
-                      cursorColor: ColorPalette.textGrey,
-                      fillColor: ColorPalette.orange05,
+                      inputColor: ColorPalette.neutralsWhite,
+                      labelStyleColor: ColorPalette.neutralsWhite,
+                      cursorColor: ColorPalette.neutralsWhite,
+                      fillColor: ColorPalette.teal200,
                       prefixIconColor: Colors.orange,
                       suffixIconColor: Colors.orange,
                       borderSideColor: Colors.orange.shade600,
@@ -143,10 +143,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       borderSide: BorderSide.none,
                       bottomPadding: 250,
                       controller: _passwordController,
-                      inputColor: ColorPalette.textGrey,
-                      labelStyleColor: ColorPalette.textGrey,
-                      cursorColor: ColorPalette.textGrey,
-                      fillColor: ColorPalette.orange05,
+                      inputColor: ColorPalette.neutralsWhite,
+                      labelStyleColor: ColorPalette.neutralsWhite,
+                      cursorColor: ColorPalette.neutralsWhite,
+                      fillColor: ColorPalette.teal200,
                       prefixIconColor: Colors.orange,
                       suffixIconColor: Colors.orange,
                       borderSideColor: Colors.orange.shade600,
@@ -158,53 +158,55 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     TextButton(
                       onPressed: () {},
-                      style: ElevatedButton.styleFrom(foregroundColor: ColorPalette.darkOrange),
-                      child: Text(
+                      style: ElevatedButton.styleFrom(foregroundColor: ColorPalette.teal200),
+                      child: const Text(
                         'Forgot Password?',
                         style: TextStyle(
-                          color: ColorPalette.textGrey,
+                          color: ColorPalette.neutralsWhite,
                         ),
                       ),
                     ),
                     ElevatedButton(
                       onPressed: () async {
-                            try {
-                                final MutationOptions options = MutationOptions(
-                                  document: gql(loginMutation(_emailController.text, _passwordController.text)),
-                                );      
-                                final QueryResult queryResult = await client.value.mutate(options);
-                                if (queryResult.hasException) {
-                                  log(queryResult.exception.toString());
-                                    FlushBarService(fitToScreen: 1, duration: 4).showCustomSnackBar(context, queryResult.exception?.graphqlErrors.first.message ?? 'Unknown error', ColorPalette.errorColor, const Icon(Icons.error, color: Colors.white, size: 18));
-                                } else {
-                                  () async {
-                                    SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight, DeviceOrientation.portraitDown, DeviceOrientation.portraitUp]);
-                                    StorageService().saveToken(queryResult.data?['login']);
-                                    log(queryResult.data?['login']);
-                                    // Navigator.pushAndRemoveUntil(
-                                    //   context,
-                                    //   MaterialPageRoute(builder: (context) => Home(name: credentials['name'], email: credentials['email'])),
-                                    //   (Route<dynamic> route) => false,
-                                    // );
-                                  }();
-                                }
-                              } catch (e) {
-                                log(e.toString());
-                              }
+                        try {
+                            final MutationOptions options = MutationOptions(
+                              document: gql(loginMutation(_emailController.text, _passwordController.text)),
+                            );      
+                            final QueryResult queryResult = await client.value.mutate(options);
+                            if (queryResult.hasException) {
+                              log(queryResult.exception.toString());
+                                FlushBarService(fitToScreen: 1, duration: 4).showCustomSnackBar(context,
+                                 queryResult.exception?.graphqlErrors.first.message ?? 'Unknown error', ColorPalette.errorColor, const Icon(Icons.error, color: Colors.white, size: FontSize.regular));
+                            } else {
+                              () async {
+                                SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeLeft,
+                                 DeviceOrientation.landscapeRight, DeviceOrientation.portraitDown, DeviceOrientation.portraitUp]);
+                                StorageService().saveToken(queryResult.data?['login']);
+                                log(queryResult.data?['login']);
+                                // Navigator.pushAndRemoveUntil(
+                                //   context,
+                                //   MaterialPageRoute(builder: (context) => Home(name: credentials['name'], email: credentials['email'])),
+                                //   (Route<dynamic> route) => false,
+                                // );
+                              }();
+                            }
+                          } catch (e) {
+                            log(e.toString());
+                          }
                       },
                       style: ElevatedButton.styleFrom(
-                        foregroundColor: ColorPalette.darkOrange,
-                        backgroundColor: ColorPalette.orange05,
+                        foregroundColor: ColorPalette.teal200,
+                        backgroundColor: ColorPalette.teal600,
                         padding: const EdgeInsets.symmetric(horizontal: 100, vertical: 15),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20.0),
                         ),
                       ),
-                      child: Text(
+                      child: const Text(
                         'Login',
                         style: TextStyle(
-                          fontSize: 18,
-                          color: ColorPalette.textGrey,
+                          fontSize: FontSize.regular,
+                          color: ColorPalette.neutralsWhite,
                         ),
                       ),
                     ),
@@ -217,20 +219,20 @@ class _LoginScreenState extends State<LoginScreen> {
             alignment: Alignment.bottomCenter,
             child: TextButton(
               onPressed: () {},
-              style: ElevatedButton.styleFrom(foregroundColor: ColorPalette.darkOrange),
-              child: Row(
+              style: ElevatedButton.styleFrom(foregroundColor: ColorPalette.teal200),
+              child: const Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
                     "Don't have an account?",
                     style: TextStyle(
-                      color: ColorPalette.textGrey,
+                      color: ColorPalette.neutralsWhite,
                     ),
                   ),
-                  Text(' Register now',
+                  Text('Register now',
                     style: TextStyle(
-                      fontSize: 16.5,
-                      color: ColorPalette.textGrey,
+                      fontSize: FontSize.small,
+                      color: ColorPalette.neutralsWhite,
                       fontWeight: FontWeight.bold
                     )
                   )

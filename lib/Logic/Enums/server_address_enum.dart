@@ -2,6 +2,7 @@
 
 enum ServerAddressEnum {
   LOCAL1,
+  LOCAL2
 }
 
 extension AddressExtension on ServerAddressEnum {
@@ -9,6 +10,8 @@ extension AddressExtension on ServerAddressEnum {
     switch (this) {
       case ServerAddressEnum.LOCAL1:
         return 'http://192.168.255.106/graphql';
+      case ServerAddressEnum.LOCAL2:
+        return 'http://192.168.18.3/graphql';
       default:
         return '';
     }

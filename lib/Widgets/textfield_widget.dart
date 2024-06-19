@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:kibun/Logic/Services/style.dart';
 import 'package:kibun/ViewModels/email_validator_model.dart';
 import 'package:provider/provider.dart';
 
@@ -77,7 +78,7 @@ class TextFieldWidget extends StatelessWidget {
       obscureText: obscureText,
       style: TextStyle(
         color: inputColor,
-        fontSize: 17,
+        fontSize: FontSize.small,
         fontWeight: FontWeight.w400
       ),
       cursorColor: cursorColor,

@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:kibun/Logic/Services/color_palette.dart';
+import 'package:kibun/Logic/Services/style.dart';
 
 class NoInternetScreen extends StatefulWidget {
   const NoInternetScreen({super.key});
@@ -15,7 +15,7 @@ class _NoInternetScreenState extends State<NoInternetScreen> {
     return const Directionality(
       textDirection: TextDirection.ltr,
       child: Scaffold(
-        backgroundColor: ColorPalette.backgroundColor,
+        backgroundColor: ColorPalette.black300,
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -23,7 +23,7 @@ class _NoInternetScreenState extends State<NoInternetScreen> {
               Icon(
                 CupertinoIcons.wifi_slash,
                 size: 100,
-                color: ColorPalette.orange50,
+                color: ColorPalette.teal200,
               ),
               SizedBox(height: 20),
               Padding(
@@ -33,7 +33,7 @@ class _NoInternetScreenState extends State<NoInternetScreen> {
                   child: Text(
                     "Unable to establish network connection",
                     style: TextStyle(
-                      color: ColorPalette.orange50,
+                      color: ColorPalette.teal200,
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
                     ),
@@ -44,7 +44,7 @@ class _NoInternetScreenState extends State<NoInternetScreen> {
               Text(
                 'Ensure your device is online',
                 style: TextStyle(
-                  color: ColorPalette.orange50,
+                  color: ColorPalette.teal200,
                   fontSize: 16,
                 ),
                 textAlign: TextAlign.center,

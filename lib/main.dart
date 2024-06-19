@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:kibun/Logic/Services/color_palette.dart';
+import 'package:kibun/Logic/Services/style.dart';
 import 'package:kibun/Screens/InternetConnection/connection_alert.dart';
 import 'package:kibun/Screens/login_screen.dart';
 import 'package:kibun/ViewModels/email_validator_model.dart';
@@ -9,7 +9,7 @@ import 'package:provider/provider.dart';
 void main() {
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
-      systemNavigationBarColor: ColorPalette.backgroundColor
+      systemNavigationBarColor: ColorPalette.black300
     )
   );
   runApp(const MainApp());
@@ -31,7 +31,7 @@ class MainApp extends StatelessWidget {
           child: MaterialApp(
             theme: ThemeData(
               progressIndicatorTheme: const ProgressIndicatorThemeData(
-                color: ColorPalette.orange40
+                color: ColorPalette.teal700
               ),
               dialogTheme: DialogTheme(
                 surfaceTintColor: Colors.white,
@@ -40,7 +40,7 @@ class MainApp extends StatelessWidget {
                   borderRadius: BorderRadius.circular(3)
                 )
               ),
-              primaryColor: ColorPalette.orange40,
+              primaryColor: ColorPalette.black300,
               cardTheme: CardTheme(
                 surfaceTintColor: Colors.white,
                 color: Colors.white,
@@ -62,7 +62,7 @@ class MainApp extends StatelessWidget {
                 ),
               ),
             ),
-            title: "Hotel rent",
+            title: "Kibun",
             initialRoute: '/Screens/login_screen',
             routes: {
               '/Screens/login_screen': (context) => const LoginScreen(),
