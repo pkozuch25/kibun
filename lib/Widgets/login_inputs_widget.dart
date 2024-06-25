@@ -4,13 +4,13 @@ import 'package:kibun/ViewModels/email_validator_model.dart';
 import 'package:kibun/Widgets/textfield_widget.dart';
 import 'package:provider/provider.dart';
 
-class LoginInputsWidgets extends StatelessWidget {
+class LoginInputsWidget extends StatelessWidget {
 
   final TextEditingController emailController;
   final TextEditingController passwordController;
   final void Function() scrollUpOnInputTap;
 
-  const LoginInputsWidgets({
+  const LoginInputsWidget({
     super.key, 
     required this.emailController,
     required this.passwordController,

@@ -4,7 +4,7 @@ import 'package:kibun/ViewModels/email_validator_model.dart';
 import 'package:kibun/Widgets/textfield_widget.dart';
 import 'package:provider/provider.dart';
 
-class RegistrationInputsWidgets extends StatelessWidget {
+class RegistrationInputsWidget extends StatelessWidget {
 
   final TextEditingController emailController;
   final TextEditingController usernameController;
@@ -14,7 +14,7 @@ class RegistrationInputsWidgets extends StatelessWidget {
   final void Function() onSuffixIconTap;
   final bool shouldPasswordConfirmationBeVisible;
 
-  const RegistrationInputsWidgets({
+  const RegistrationInputsWidget({
     super.key, 
     required this.emailController,
     required this.usernameController,

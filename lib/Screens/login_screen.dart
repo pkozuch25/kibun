@@ -116,7 +116,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 const SizedBox(height: 40),
-                LoginInputsWidgets(
+                LoginInputsWidget(
                   emailController: _emailController, 
                   passwordController: _passwordController, 
                   scrollUpOnInputTap: scrollUpOnInputTap

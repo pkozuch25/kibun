@@ -10,7 +10,7 @@ import 'package:kibun/Logic/Services/flushbar_service.dart';
 import 'package:kibun/Logic/Services/storage_service.dart';
 import 'package:kibun/Screens/login_screen.dart';
 import 'package:kibun/Widgets/background_widget.dart';
-import 'package:kibun/Widgets/registration_inputs_widgets.dart';
+import 'package:kibun/Widgets/registration_inputs_widget.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -92,7 +92,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                 ),
                 const SizedBox(height: 40),
-                RegistrationInputsWidgets(
+                RegistrationInputsWidget(
                   usernameController: _usernameController,
                   passwordController: _passwordController,
                   passwordConfirmationController: _passwordConfirmationController,
