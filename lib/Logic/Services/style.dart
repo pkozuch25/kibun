@@ -54,12 +54,12 @@ class FontSize {
   static const double main16 = 16;
   static const double main12 = 12;
   static const double main10 = 10;
-  static const double disply96 = 96;
-  static const double disply64 = 64;
-  static const double disply48 = 48;
-  static const double disply36 = 36;
-  static const double disply24 = 24;
-  static const double disply16 = 16;
+  static const double display96 = 96;
+  static const double display64 = 64;
+  static const double display48 = 48;
+  static const double display36 = 36;
+  static const double display24 = 24;
+  static const double display16 = 16;
   
 }
 

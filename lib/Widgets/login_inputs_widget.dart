@@ -4,25 +4,17 @@ import 'package:kibun/ViewModels/email_validator_model.dart';
 import 'package:kibun/Widgets/textfield_widget.dart';
 import 'package:provider/provider.dart';
 
-class RegistrationInputsWidgets extends StatelessWidget {
+class LoginInputsWidgets extends StatelessWidget {
 
   final TextEditingController emailController;
-  final TextEditingController usernameController;
   final TextEditingController passwordController;
-  final TextEditingController passwordConfirmationController;
   final void Function() scrollUpOnInputTap;
-  final void Function() onSuffixIconTap;
-  final bool shouldPasswordConfirmationBeVisible;
 
-  const RegistrationInputsWidgets({
+  const LoginInputsWidgets({
     super.key, 
     required this.emailController,
-    required this.usernameController,
     required this.passwordController,
-    required this.passwordConfirmationController,
     required this.scrollUpOnInputTap,
-    required this.onSuffixIconTap,
-    required this.shouldPasswordConfirmationBeVisible,
 
   });
 
@@ -30,26 +22,7 @@ class RegistrationInputsWidgets extends StatelessWidget {
   Widget build(BuildContext context) {  
     final model = Provider.of<EmailValidatorModel>(context);
     return Column(
-      children: [
-        TextFieldWidget(
-          borderSide: BorderSide.none,
-          bottomPadding: 250,
-          controller: usernameController,
-          inputColor: ColorPalette.neutralsWhite,
-          labelStyleColor: ColorPalette.neutralsWhite,
-          cursorColor: ColorPalette.neutralsWhite,
-          fillColor: ColorPalette.black100,
-          prefixIconColor: ColorPalette.neutralsWhite,
-          suffixIconColor: ColorPalette.neutralsWhite,
-          borderSideColor: ColorPalette.neutralsWhite,
-          hintText: 'Username',
-          onTap: () {
-            scrollUpOnInputTap();
-          },
-          obscureText: false,
-          prefixIconData: Icons.person_outline,
-        ),
-        const SizedBox(height: 20),
+       children: [
         TextFieldWidget(
           borderSide: BorderSide.none,
           bottomPadding: 250,
@@ -94,29 +67,7 @@ class RegistrationInputsWidgets extends StatelessWidget {
           prefixIconData: Icons.lock_outline,
           suffixIconData: model.isVisible ? Icons.visibility: Icons.visibility_off,
         ),
-        const SizedBox(height: 20),
-        TextFieldWidget(
-          borderSide: BorderSide.none,
-          bottomPadding: 250,
-          controller: passwordConfirmationController,
-          inputColor: ColorPalette.neutralsWhite,
-          labelStyleColor: ColorPalette.neutralsWhite,
-          cursorColor: ColorPalette.neutralsWhite,
-          fillColor: ColorPalette.black100,
-          prefixIconColor: ColorPalette.neutralsWhite,
-          suffixIconColor: ColorPalette.neutralsWhite,
-          borderSideColor: ColorPalette.neutralsWhite,
-          hintText: 'Confirm password',
-          onTap: () {
-            scrollUpOnInputTap();
-          },
-          autoFillHints: const [AutofillHints.password],
-          obscureText: shouldPasswordConfirmationBeVisible ? false: true,
-          prefixIconData: Icons.lock_outline,
-          suffixIconData: shouldPasswordConfirmationBeVisible ? Icons.visibility: Icons.visibility_off,
-          onSuffixIconTap: onSuffixIconTap,
-        ),
-      ],
+      ]
     );
   }
 }
