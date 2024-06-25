@@ -1,9 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'dart:developer';
-import 'dart:io';
-
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
@@ -11,41 +8,24 @@ import 'package:kibun/Logic/Enums/server_address_enum.dart';
 import 'package:kibun/Logic/Services/style.dart';
 import 'package:kibun/Logic/Services/flushbar_service.dart';
 import 'package:kibun/Logic/Services/storage_service.dart';
-import 'package:kibun/Screens/register_screen.dart';
-import 'package:kibun/ViewModels/email_validator_model.dart';
+import 'package:kibun/Screens/login_screen.dart';
 import 'package:kibun/Widgets/background_widget.dart';
-import 'package:kibun/Widgets/textfield_widget.dart';
-import 'package:provider/provider.dart';
+import 'package:kibun/Widgets/registration_inputs_widgets.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class RegisterScreen extends StatefulWidget {
+  const RegisterScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _RegisterScreenState extends State<RegisterScreen> {
+  final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-  String? _deviceName, _deviceId;
+  final TextEditingController _passwordConfirmationController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
-
-  void getDeviceName() async { 
-    try {
-      if (Platform.isAndroid){
-        AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-        _deviceName = androidInfo.model;
-        _deviceId = androidInfo.id;
-      } else if (Platform.isIOS){
-        IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
-        _deviceName = iosInfo.utsname.machine;
-        _deviceId = iosInfo.identifierForVendor;
-      }
-    } catch (e){
-      log(e.toString());
-    }
-  }
+  bool shouldPasswordConfirmationBeVisible = true;
 
   void scrollUpOnInputTap() {
     _scrollController.animateTo(
@@ -55,13 +35,16 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  String loginMutation(String emailTemp, String passwordTemp) {
+  String registerMutation(String username, String email, String password, String confirmPassword) {
     return '''
       mutation{
-        login( 
-          email: "$emailTemp"
-          password: "$passwordTemp"
-          device: "${_deviceName ?? 'unknown'}$_deviceId"
+        register(
+          input: {
+            name: "$username" 
+            email: "$email"
+            password: "$password"
+            password_confirmation: "$confirmPassword"
+          }
         )
       }
     ''';
@@ -92,9 +75,6 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
 
-    
-    final model = Provider.of<EmailValidatorModel>(context);
-
     return Scaffold(
       body: BackgroundWidget(
         child: Center(
@@ -105,72 +85,32 @@ class _LoginScreenState extends State<LoginScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 const Text(
-                  'Welcome Back',
-                  style: TextStyle(
-                    fontSize: FontSize.large,
-                    fontWeight: FontWeight.bold,
-                    color: ColorPalette.neutralsWhite,
-                  ),
-                ),
-                const SizedBox(height: 16),
-                const Text(
-                  'Please login to continue',
+                  'Please register to continue',
                   style: TextStyle(
                     fontSize: FontSize.regular,
                     color: ColorPalette.neutralsWhite,
                   ),
                 ),
                 const SizedBox(height: 40),
-                TextFieldWidget(
-                  borderSide: BorderSide.none,
-                  bottomPadding: 250,
-                  controller: _emailController,
-                  inputColor: ColorPalette.neutralsWhite,
-                  labelStyleColor: ColorPalette.neutralsWhite,
-                  cursorColor: ColorPalette.neutralsWhite,
-                  fillColor: ColorPalette.black100,
-                  prefixIconColor: ColorPalette.neutralsWhite,
-                  suffixIconColor: ColorPalette.neutralsWhite,
-                  borderSideColor: ColorPalette.neutralsWhite,
-                  hintText: 'Email',
-                  onChanged: (value) {
-                    model.isValidEmail(value);
+                RegistrationInputsWidgets(
+                  usernameController: _usernameController,
+                  passwordController: _passwordController,
+                  passwordConfirmationController: _passwordConfirmationController,
+                  emailController: _emailController,
+                  shouldPasswordConfirmationBeVisible: shouldPasswordConfirmationBeVisible,
+                  scrollUpOnInputTap: scrollUpOnInputTap,
+                  onSuffixIconTap: () {
+                    setState(() {
+                      shouldPasswordConfirmationBeVisible = !shouldPasswordConfirmationBeVisible;
+                    });
                   },
-                  onTap: () {
-                    scrollUpOnInputTap();
-                  },
-                  autoFillHints: const [AutofillHints.email],
-                  obscureText: false,
-                  prefixIconData: Icons.person_outline,
-                  suffixIconData: model.isValid == true ? Icons.check : null,
-                ),
-                const SizedBox(height: 20),
-                TextFieldWidget(
-                  borderSide: BorderSide.none,
-                  bottomPadding: 250,
-                  controller: _passwordController,
-                  inputColor: ColorPalette.neutralsWhite,
-                  labelStyleColor: ColorPalette.neutralsWhite,
-                  cursorColor: ColorPalette.neutralsWhite,
-                  fillColor: ColorPalette.black100,
-                  prefixIconColor: ColorPalette.neutralsWhite,
-                  suffixIconColor: ColorPalette.neutralsWhite,
-                  borderSideColor: ColorPalette.neutralsWhite,
-                  hintText: 'Password',
-                  onTap: () {
-                    scrollUpOnInputTap();
-                  },
-                  autoFillHints: const [AutofillHints.password],
-                  obscureText: model.isVisible ? false: true,
-                  prefixIconData: Icons.lock_outline,
-                  suffixIconData: model.isVisible ? Icons.visibility: Icons.visibility_off,
                 ),
                 const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () async {
                     try {
                         final MutationOptions options = MutationOptions(
-                          document: gql(loginMutation(_emailController.text, _passwordController.text)),
+                          document: gql(registerMutation(_usernameController.text, _emailController.text, _passwordController.text, _passwordConfirmationController.text)),
                         );      
                         final QueryResult queryResult = await client.value.mutate(options);
                         if (queryResult.hasException) {
@@ -182,11 +122,10 @@ class _LoginScreenState extends State<LoginScreen> {
                             SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeLeft,
                               DeviceOrientation.landscapeRight, DeviceOrientation.portraitDown, DeviceOrientation.portraitUp
                             ]);
-                            StorageService().saveToken(queryResult.data?['login']);
-                            log(queryResult.data?['login']);
+                            StorageService().saveToken(queryResult.data?['register']);
                             FlushBarService(fitToScreen: 1, duration: 4).showCustomSnackBar(
                               context,
-                              'Login was successful!',
+                              'Registration was successful!',
                             ColorPalette.successColor, 
                               const Icon(
                                 Icons.error, 
@@ -227,28 +166,31 @@ class _LoginScreenState extends State<LoginScreen> {
                   onPressed: () {
                     Navigator.pushAndRemoveUntil(
                       context,
-                      MaterialPageRoute(builder: (context) => const RegisterScreen()),
+                      MaterialPageRoute(builder: (context) => const LoginScreen()),
                       (Route<dynamic> route) => false,
                     );
                   },
                   style: ElevatedButton.styleFrom(foregroundColor: ColorPalette.teal200),
-                  child: const Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "Don't have an account?",
-                        style: TextStyle(
-                          color: ColorPalette.neutralsWhite,
+                  child: const FittedBox(
+                    fit: BoxFit.contain,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Already have an account?",
+                          style: TextStyle(
+                            color: ColorPalette.neutralsWhite,
+                          ),
                         ),
-                      ),
-                      Text(' Register now',
-                        style: TextStyle(
-                          fontSize: FontSize.small,
-                          color: ColorPalette.neutralsWhite,
-                          fontWeight: FontWeight.bold
+                        Text(' Back to login',
+                          style: TextStyle(
+                            fontSize: FontSize.small,
+                            color: ColorPalette.neutralsWhite,
+                            fontWeight: FontWeight.bold
+                          )
                         )
-                      )
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ],
