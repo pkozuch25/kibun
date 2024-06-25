@@ -55,12 +55,12 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  String loginMutation(String emailTemp, String passwordTemp) {
+  String loginMutation(String email, String password) {
     return '''
       mutation{
         login( 
-          email: "$emailTemp"
-          password: "$passwordTemp"
+          email: "$email"
+          password: "$password"
           device: "${_deviceName ?? 'unknown'}$_deviceId"
         )
       }
