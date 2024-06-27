@@ -3,10 +3,13 @@ import 'package:flutter/services.dart';
 import 'package:kibun/Logic/Services/style.dart';
 import 'package:kibun/Screens/InternetConnection/connection_alert.dart';
 import 'package:kibun/Screens/login_screen.dart';
+import 'package:kibun/Screens/navbar_scaffolding_screen.dart';
 import 'package:kibun/ViewModels/email_validator_model.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-void main() {
+void main() async {
+  await dotenv.load(fileName: ".env");
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
       systemNavigationBarColor: ColorPalette.black300
@@ -66,6 +69,7 @@ class MainApp extends StatelessWidget {
             initialRoute: '/Screens/login_screen',
             routes: {
               '/Screens/login_screen': (context) => const LoginScreen(),
+              '/Screens/navbar_scaffolding_screen': (context) => const NavbarScaffoldingScreen(),
             }),
         ),
         const ConnectionAlert(),

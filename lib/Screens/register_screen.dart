@@ -5,10 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:kibun/Logic/Enums/server_address_enum.dart';
+import 'package:kibun/Logic/Services/spotify_auth_service.dart';
 import 'package:kibun/Logic/Services/style.dart';
 import 'package:kibun/Logic/Services/flushbar_service.dart';
 import 'package:kibun/Logic/Services/storage_service.dart';
 import 'package:kibun/Screens/login_screen.dart';
+import 'package:kibun/Screens/navbar_scaffolding_screen.dart';
 import 'package:kibun/Widgets/background_widget.dart';
 import 'package:kibun/Widgets/registration_inputs_widget.dart';
 
@@ -133,12 +135,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 size: FontSize.regular
                               )
                             );
-                            // przekierowanie na ekran główny
-                            // Navigator.pushAndRemoveUntil(
-                            //   context,
-                            //   MaterialPageRoute(builder: (context) => Home(name: credentials['name'], email: credentials['email'])),
-                            //   (Route<dynamic> route) => false,
-                            // );
+                            SpotifyAuthService().getAccessToken();
+                            Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(builder: (context) => const NavbarScaffoldingScreen()),
+                              (Route<dynamic> route) => false,
+                            );
                           }();
                         }
                       } catch (e) {
