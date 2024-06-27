@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 
 ///Performs a request to Spotify API.
 Future<Map<String, dynamic>> callSpotifyAPI(String endpoint,
-    Map<String, String> headers, {Map<String, String>? body}) async {
+    Map<String, String> headers, Map<String, String>? body) async {
   String? requestParameters = convertBody(body);
   String endpointURL = requestParameters == null
       ? "https://api.spotify.com/v1/$endpoint"
@@ -21,6 +21,6 @@ String? convertBody(Map<String, String>? requestBody) {
     return null;
   }
   requestBody.forEach((name, value) => parameters.add("$name=$value"));
-  String joinedParameters = parameters.join("&");
+  String joinedParameters = parameters.join("&").replaceAll(RegExp(r','), "%2C");
   return (joinedParameters);
 }
