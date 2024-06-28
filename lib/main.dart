@@ -66,7 +66,7 @@ class MainApp extends StatelessWidget {
               ),
             ),
             title: "Kibun",
-            initialRoute: '/Screens/login_screen',
+            initialRoute: '/Screens/navbar_scaffolding_screen',
             routes: {
               '/Screens/login_screen': (context) => const LoginScreen(),
               '/Screens/navbar_scaffolding_screen': (context) => const NavbarScaffoldingScreen(),

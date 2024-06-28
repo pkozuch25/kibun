@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:kibun/Widgets/background_widget.dart';
 
 
-class SearchTab extends StatefulWidget {
-  const SearchTab({super.key});
+class UserTab extends StatefulWidget {
+  const UserTab({super.key});
 
   @override
-  State<SearchTab> createState() => _SearchTabState();
+  State<UserTab> createState() => _UserTabState();
 }
 
-class _SearchTabState extends State<SearchTab> {
+class _UserTabState extends State<UserTab> {
 
   
 
@@ -22,10 +22,10 @@ class _SearchTabState extends State<SearchTab> {
   Widget build(BuildContext context) {
 
     return const Scaffold(
-      body: BackgroundWidget(
+        body: BackgroundWidget(
         child: Column(
           children: [
-            Center(child: Text('search')),
+            Center(child: Text('settings')),
           ],
         ),
       ),

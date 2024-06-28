@@ -1,12 +1,14 @@
 import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:kibun/Logic/Services/play_spotify_track_service.dart';
 import 'package:kibun/Logic/Services/style.dart';
-import 'package:palette_generator/palette_generator.dart';
-import 'package:spotify/spotify.dart' as spotify;
 
 class MusicPlayerScreen extends StatefulWidget {
-  const MusicPlayerScreen({super.key});
+  final String trackId;
+
+  const MusicPlayerScreen({super.key, required this.trackId});
 
   @override
   State<MusicPlayerScreen> createState() => _MusicPlayerScreenState();
@@ -16,47 +18,14 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
   final player = AudioPlayer();
 
   @override
-  void dispose() {
-    player.dispose();
-    super.dispose();
-  }
-
-  @override
   void initState() {
-    // final credentials = SpotifyApiCredentials(
-    //     CustomStrings.clientId, CustomStrings.clientSecret);
-    // final spotify = SpotifyApi(credentials);
-    // spotify.tracks.get(music.trackId).then((track) async {
-    //   String? tempSongName = track.name;
-    //   if (tempSongName != null) {
-    //     music.songName = tempSongName;
-    //     music.artistName = track.artists?.first.name ?? "";
-    //     String? image = track.album?.images?.first.url;
-    //     if (image != null) {
-    //       music.songImage = image;
-    //       final tempSongColor = await getImagePalette(NetworkImage(image));
-    //       if (tempSongColor != null) {
-    //         music.songColor = tempSongColor;
-    //       }
-    //     }
-    //     music.artistImage = track.artists?.first.images?.first.url;
-    //     final yt = YoutubeExplode();
-    //     final video = (await yt.search.search("$tempSongName ${music.artistName??""}")).first;
-    //     final videoId = video.id.value;
-    //     music.duration = video.duration;
-    //     setState(() {});
-    //     var manifest = await yt.videos.streamsClient.getManifest(videoId);
-    //     var audioUrl = manifest.audioOnly.last.url;
-    //     player.play(UrlSource(audioUrl.toString()));
-    //   }
-    // });
     super.initState();
   }
 
-  Future<Color?> getImagePalette(ImageProvider imageProvider) async {
-    final PaletteGenerator paletteGenerator =
-        await PaletteGenerator.fromImageProvider(imageProvider);
-    return paletteGenerator.dominantColor?.color;
+  @override
+  void dispose() {
+    player.dispose();
+    super.dispose();
   }
 
   @override
@@ -160,22 +129,16 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      // IconButton(
-                      //     onPressed: () {
-                      //       Navigator.push(
-                      //           context,
-                      //           MaterialPageRoute(
-                      //               builder: (context) =>
-                      //                   LyricsPage(music: music, player: player,)));
-                      //     },
-                      //     icon: const Icon(Icons.lyrics_outlined,
-                      //         color: Colors.white)),
                       IconButton(
                           onPressed: () {},
                           icon: const Icon(Icons.skip_previous,
                               color: Colors.white, size: 36)),
                       IconButton(
                           onPressed: () async {
+                            PlaySpotifyTrackService().connectToSpotifyRemote(dotenv.env['CLIENT_ID'].toString());
+                            print(widget.trackId);
+                            PlaySpotifyTrackService().getAccessToken();
+                            // PlaySpotifyTrackService().play(widget.trackId);
                             if (player.state == PlayerState.playing) {
                               await player.pause();
                             } else {
@@ -184,11 +147,11 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
                             setState(() {});
                           },
                           icon: Icon(
-                            player.state == PlayerState.playing
+                           player.state == PlayerState.playing
                                 ? Icons.pause
-                                : Icons.play_circle,
+                                : Icons.play_circle, 
+                                size: 60,
                             color: Colors.white,
-                            size: 60,
                           )),
                       IconButton(
                           onPressed: () {},

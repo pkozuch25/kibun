@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 class ColorPalette {
@@ -36,6 +38,27 @@ class ColorPalette {
   static const Color violet600 = Color(0xff5450ff);
   static const Color violet700 = Color(0xff3e3aff);
   static const Color violet800 = Color(0xff2924ff);
+
+  static List<Color> generalTabColorList = [
+    teal200,
+    teal300,
+    teal400,
+    teal500,
+    magenta200,
+    magenta300,
+    magenta400,
+    magenta500,
+    violet200,
+    violet300,
+    violet400,
+    violet500
+  ];
+
+  Color getRandomColor() {
+    final random = Random();
+    int index1 = random.nextInt(generalTabColorList.length);
+    return generalTabColorList[index1];
+  }
 }
 
 class FontFamily {
@@ -52,6 +75,7 @@ class FontSize {
   static const double main36 = 36;
   static const double main24 = 24;
   static const double main16 = 16;
+  static const double main14 = 14;
   static const double main12 = 12;
   static const double main10 = 10;
   static const double display96 = 96;

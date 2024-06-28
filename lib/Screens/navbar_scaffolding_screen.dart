@@ -6,8 +6,8 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:kibun/Logic/Services/style.dart';
 import 'package:kibun/Screens/Tabs/recommended_tab.dart';
-import 'package:kibun/Screens/Tabs/search_tab.dart';
-import 'package:kibun/Screens/Tabs/settings_tab.dart';
+import 'package:kibun/Screens/Tabs/playlists_tab.dart';
+import 'package:kibun/Screens/Tabs/user_tab.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
 
 class NavbarScaffoldingScreen extends StatefulWidget{
@@ -45,7 +45,7 @@ class _NavbarScaffoldingScreenState extends State<NavbarScaffoldingScreen> {
           activeColorSecondary: ColorPalette.teal800
         ),),
         PersistentTabConfig(screen: 
-          const SearchTab(
+          const PlaylistsTab(
           ),
           item: ItemConfig(
             icon: const Icon(Icons.move_up),
@@ -54,7 +54,7 @@ class _NavbarScaffoldingScreenState extends State<NavbarScaffoldingScreen> {
             activeColorSecondary: ColorPalette.teal800
           ),
         ),
-        PersistentTabConfig(screen: const SettingsTab(),
+        PersistentTabConfig(screen: const UserTab(),
           item: ItemConfig(
             icon: const Icon(Icons.menu),
             title: "Ustawienia",

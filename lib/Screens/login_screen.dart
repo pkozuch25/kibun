@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:kibun/Logic/Enums/server_address_enum.dart';
-import 'package:kibun/Logic/Services/spotify_auth_service.dart';
 import 'package:kibun/Logic/Services/style.dart';
 import 'package:kibun/Logic/Services/flushbar_service.dart';
 import 'package:kibun/Logic/Services/storage_service.dart';
@@ -127,7 +126,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 ElevatedButton(
                   onPressed: () async {
                     try {
-                       log(await SpotifyAuthService().getAccessToken());
                         final MutationOptions options = MutationOptions(
                           document: gql(loginMutation(_emailController.text, _passwordController.text)),
                         );      

@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:kibun/Widgets/background_widget.dart';
 
 
-class SettingsTab extends StatefulWidget {
-  const SettingsTab({super.key});
+class PlaylistsTab extends StatefulWidget {
+  const PlaylistsTab({super.key});
 
   @override
-  State<SettingsTab> createState() => _SettingsTabState();
+  State<PlaylistsTab> createState() => _PlaylistsTabState();
 }
 
-class _SettingsTabState extends State<SettingsTab> {
+class _PlaylistsTabState extends State<PlaylistsTab> {
 
   
 
@@ -22,10 +22,10 @@ class _SettingsTabState extends State<SettingsTab> {
   Widget build(BuildContext context) {
 
     return const Scaffold(
-        body: BackgroundWidget(
+      body: BackgroundWidget(
         child: Column(
           children: [
-            Center(child: Text('settings')),
+            Center(child: Text('search')),
           ],
         ),
       ),
