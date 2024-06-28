@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:kibun/Logic/Enums/server_address_enum.dart';
+import 'package:kibun/Logic/Services/storage_service.dart';
 import 'package:kibun/Logic/Services/style.dart';
 import 'package:kibun/Screens/Tabs/recommended_tab.dart';
 import 'package:kibun/Screens/Tabs/playlists_tab.dart';
@@ -39,8 +41,8 @@ class _NavbarScaffoldingScreenState extends State<NavbarScaffoldingScreen> {
       WidgetsFlutterBinding.ensureInitialized();
       _pages.addAll([
          PersistentTabConfig(screen: const RecommendedTab(), item:  ItemConfig(
-          icon: const Icon(Icons.money),
-          title: "Depozyty",
+          icon: const Icon(Icons.recommend_outlined),
+          title: "Recommended",
           activeForegroundColor : ColorPalette.teal800,
           activeColorSecondary: ColorPalette.teal800
         ),),
@@ -49,7 +51,7 @@ class _NavbarScaffoldingScreenState extends State<NavbarScaffoldingScreen> {
           ),
           item: ItemConfig(
             icon: const Icon(Icons.move_up),
-            title: "Zadysponowane",
+            title: "Playlists",
             activeForegroundColor: ColorPalette.teal800,
             activeColorSecondary: ColorPalette.teal800
           ),
@@ -79,8 +81,9 @@ class _NavbarScaffoldingScreenState extends State<NavbarScaffoldingScreen> {
 
 Future<void> loadData() async {
   try {
+    await readToken();
     if (tokenRead != null && tokenRead!.isNotEmpty) {
-      await buildHome();
+      await getUserCredentials();
       setState(() {
         _isLoading = false;
       });
@@ -99,7 +102,7 @@ Future<void> loadData() async {
   }
 }
 
-Future<void> buildHome() async {
+Future<void> getUserCredentials() async {
   try {
     Map<String, dynamic> credentials = await getCredentials(tokenRead.toString());
     name = credentials['name'];
@@ -112,6 +115,10 @@ Future<void> buildHome() async {
     });
   }
 }
+
+  Future<void> readToken() async{
+    tokenRead = await StorageService().readToken();
+  }
 
   String credentialsQuery() {
     return '''query{
@@ -126,7 +133,7 @@ Future<void> buildHome() async {
 
   Future<Map<String, dynamic>> getCredentials(String token) async {
   try {
-    final HttpLink httpLink = HttpLink(link.toString());
+    final HttpLink httpLink = HttpLink(ServerAddressEnum.LOCAL2.ipAddress);
     final authLink = AuthLink(
       getToken: () async => 'Bearer $token',
     );

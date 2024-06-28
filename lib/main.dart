@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:kibun/Logic/Services/style.dart';
 import 'package:kibun/Screens/InternetConnection/connection_alert.dart';
+import 'package:kibun/Screens/loading_screen.dart';
 import 'package:kibun/Screens/login_screen.dart';
 import 'package:kibun/Screens/navbar_scaffolding_screen.dart';
 import 'package:kibun/ViewModels/email_validator_model.dart';
@@ -66,10 +67,9 @@ class MainApp extends StatelessWidget {
               ),
             ),
             title: "Kibun",
-            initialRoute: '/Screens/navbar_scaffolding_screen',
+            initialRoute: '/Screens/loading_screen',
             routes: {
-              '/Screens/login_screen': (context) => const LoginScreen(),
-              '/Screens/navbar_scaffolding_screen': (context) => const NavbarScaffoldingScreen(),
+              '/Screens/loading_screen': (context) => const LoadingScreen(),
             }),
         ),
         const ConnectionAlert(),
