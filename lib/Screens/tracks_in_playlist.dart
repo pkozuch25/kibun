@@ -7,24 +7,24 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
-import 'package:kibun/Logic/API/Playlists/fetch_user_playlists_query.dart';
+import 'package:kibun/Logic/API/Playlists/fetch_songs_in_playlist_query.dart';
 import 'package:kibun/Logic/Enums/server_address_enum.dart';
 import 'package:kibun/Logic/Services/storage_service.dart';
 import 'package:kibun/Logic/Services/style.dart';
-import 'package:kibun/Screens/add_playlist_screen.dart';
-import 'package:kibun/Screens/tracks_in_playlist.dart';
-import 'package:kibun/Widgets/Screens/playlist_widget.dart';
+import 'package:kibun/Widgets/Screens/general_tab_widget.dart';
 import 'package:kibun/Widgets/background_widget.dart';
 import 'package:kibun/Widgets/paged_sliver_masonry.dart';
 
-class PlaylistsTab extends StatefulWidget{
-  const PlaylistsTab({super.key});
+class TracksInPlaylist extends StatefulWidget{
+  final int playlistId;
+
+  const TracksInPlaylist({super.key, required this.playlistId});
 
   @override
-  State<PlaylistsTab> createState() => _PlaylistsTabState();
+  State<TracksInPlaylist> createState() => _TracksInPlaylistState();
 }
 
-class _PlaylistsTabState extends State<PlaylistsTab> {
+class _TracksInPlaylistState extends State<TracksInPlaylist> {
   final PagingController<int, Map<String, dynamic>> _pagingController = PagingController(firstPageKey: 1);
   final storage = const FlutterSecureStorage();
   String? token = '';
@@ -52,37 +52,16 @@ class _PlaylistsTabState extends State<PlaylistsTab> {
     _pagingController.addPageRequestListener((pageKey) async {
       await fetchPage(pageKey);
     });
-    setState(() {
+          setState(() {
       _isLoading = false;
     });
   } 
 
-  Future<void> _navigateAndDisplayAddPlaylist(BuildContext context) async {
-    await Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const AddPlaylistScreen()),
-    );
-    ScaffoldMessenger.of(context)
-      .setState(() {
-      _pagingController.refresh();
-    });
-  }
-
-  void _navigateAndDisplayTracksList(BuildContext context, int playlistId) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => TracksInPlaylist(playlistId: playlistId)),
-    );
-    ScaffoldMessenger.of(context)
-      .setState(() {
-      _pagingController.refresh();
-    });
-  }
-
   Future<void> fetchPage(int pageKey) async {
+    print('asdf');
     try {
-      newDataList = await FetchUserPlaylistsQuery().fetchData(pageKey, link, token);
-
+      newDataList = await FetchSongsInPlaylistQuery().fetchData(pageKey, widget.playlistId, link, token);
+      print(newDataList);
       final isLastPage = newDataList.isEmpty;
       if (isLastPage) {
         _pagingController.appendLastPage(newDataList);
@@ -90,9 +69,6 @@ class _PlaylistsTabState extends State<PlaylistsTab> {
         final nextPageKey = pageKey + 1;
         _pagingController.appendPage(newDataList, nextPageKey);
       }
-      setState(() {
-        _isLoading = false;
-      });
     } catch (error) {
       _pagingController.error = error;
       log(_pagingController.error);
@@ -109,8 +85,8 @@ class _PlaylistsTabState extends State<PlaylistsTab> {
   @override
   Widget build(BuildContext context) {
     final Widget svgSearchBar = SvgPicture.asset(
-      width: 20,
-      height: 20,
+      width: 40,
+      height: 40,
       'assets/kibun_logo.svg',
     );
     final Widget svgLoading = SvgPicture.asset(
@@ -133,13 +109,6 @@ class _PlaylistsTabState extends State<PlaylistsTab> {
       );
     } else {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          _navigateAndDisplayAddPlaylist(context);
-        },
-        backgroundColor: ColorPalette.teal500, 
-        child: Icon(Icons.add, color: ColorPalette.black500,),
-      ),
       body: BackgroundWidget(
         child: RefreshIndicator(
         onRefresh: () => refresh(),
@@ -150,11 +119,14 @@ class _PlaylistsTabState extends State<PlaylistsTab> {
                 elevation: 4,
                 expandedHeight: 10,
                 floating: true,
-                 leading:
+                 actions: [
                   Padding(    
-                    padding: const EdgeInsets.only(left: 15),
-                    child: svgSearchBar
+                    padding: EdgeInsets.only(right: 5),
+                    child: Text('Songs in a playlist', style: TextStyle(color: ColorPalette.neutralsWhite),)
                   ),
+                  SizedBox(width: 5,), 
+                  svgSearchBar,
+                 ],
                 surfaceTintColor: ColorPalette.black500,
                 backgroundColor: ColorPalette.black500,
                 foregroundColor: ColorPalette.black500,
@@ -169,14 +141,17 @@ class _PlaylistsTabState extends State<PlaylistsTab> {
                     PagedChildBuilderDelegate<Map<String, dynamic>>(
                     animateTransitions: true,
                     itemBuilder: (context, item, index) {
-                      return PlaylistWidget(
-                        albumImageUrl: item['imageUrl'],
-                        albumName: item['name'],
-                        songCount: item['tracksCount'],
-                        playlistId: item['id'],
-                        color: color!,
-                        navigateToTracksScreen: _navigateAndDisplayTracksList
-                      );
+                      print(newDataList);
+                      return GeneralTabWidget(
+                          color: color!,
+                          artist: item['artistName'],
+                          trackImageUrl: item['trackImageUrl'],
+                          songName: item['trackName'],
+                          albumName: item['artistAlbumName'],
+                          durationMs: item['durationMs'],
+                          token: token.toString(),
+                          canAddToPlaylist: false
+                        );
                       },
                     noItemsFoundIndicatorBuilder: (context) {
                       return Scaffold(
@@ -184,7 +159,7 @@ class _PlaylistsTabState extends State<PlaylistsTab> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: const [
-                              Text("You don't have any playlists!", style: TextStyle(color: ColorPalette.teal500),),
+                              Text("This playlist is currently empty!", style: TextStyle(color: ColorPalette.teal500),),
                             ],
                           ),
                         )

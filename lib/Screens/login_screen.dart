@@ -78,12 +78,12 @@ class _LoginScreenState extends State<LoginScreen> {
     setState(() {
       SystemChrome.setSystemUIOverlayStyle(
         const SystemUiOverlayStyle(
-          systemNavigationBarColor: ColorPalette.black300
+          systemNavigationBarColor: ColorPalette.black600
         )
       );
     });
 
-    final HttpLink httpLink = HttpLink(ServerAddressEnum.LOCAL2.ipAddress);
+    final HttpLink httpLink = HttpLink(ServerAddressEnum.PUBLIC1.ipAddress);
     final ValueNotifier<GraphQLClient> client = ValueNotifier(
       GraphQLClient(
         link: httpLink,
@@ -91,123 +91,126 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
 
-    return Scaffold(
-      body: BackgroundWidget(
-        child: Center(
-          child: SingleChildScrollView(
-            controller: _scrollController,
-            padding: const EdgeInsets.symmetric(horizontal: 24.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                const Text(
-                  'Welcome Back',
-                  style: TextStyle(
-                    fontSize: FontSize.large,
-                    fontWeight: FontWeight.bold,
-                    color: ColorPalette.neutralsWhite,
-                  ),
-                ),
-                const SizedBox(height: 16),
-                const Text(
-                  'Please login to continue',
-                  style: TextStyle(
-                    fontSize: FontSize.regular,
-                    color: ColorPalette.neutralsWhite,
-                  ),
-                ),
-                const SizedBox(height: 40),
-                LoginInputsWidget(
-                  emailController: _emailController, 
-                  passwordController: _passwordController, 
-                  scrollUpOnInputTap: scrollUpOnInputTap
-                ),
-                const SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: () async {
-                    try {
-                        final MutationOptions options = MutationOptions(
-                          document: gql(loginMutation(_emailController.text, _passwordController.text)),
-                        );      
-                        final QueryResult queryResult = await client.value.mutate(options);
-                        if (queryResult.hasException) {
-                          log(queryResult.exception.toString());
-                            FlushBarService(fitToScreen: 1, duration: 4).showCustomSnackBar(context,
-                              queryResult.exception?.graphqlErrors.first.message ?? 'Unknown error', ColorPalette.errorColor, const Icon(Icons.error, color: Colors.white, size: FontSize.regular));
-                        } else {
-                          () async {
-                            SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeLeft,
-                              DeviceOrientation.landscapeRight, DeviceOrientation.portraitDown, DeviceOrientation.portraitUp
-                            ]);
-                            StorageService().saveToken(queryResult.data?['login']);
-                            log(queryResult.data?['login']);
-                            FlushBarService(fitToScreen: 1, duration: 4).showCustomSnackBar(
-                              context,
-                              'Login was successful!',
-                            ColorPalette.successColor, 
-                              const Icon(
-                                Icons.error, 
-                                color: Colors.white, 
-                                size: FontSize.regular
-                              )
-                            );
-                            Navigator.pushAndRemoveUntil(
-                              context,
-                              MaterialPageRoute(builder: (context) => const NavbarScaffoldingScreen()),
-                              (Route<dynamic> route) => false,
-                            );
-                          }();
-                        }
-                      } catch (e) {
-                        log(e.toString());
-                      }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: ColorPalette.teal200,
-                    backgroundColor: ColorPalette.teal500,
-                    padding: const EdgeInsets.symmetric(horizontal: 100, vertical: 15),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20.0),
+    return PopScope(
+      canPop: false,
+      child: Scaffold(
+        body: BackgroundWidget(
+          child: Center(
+            child: SingleChildScrollView(
+              controller: _scrollController,
+              padding: const EdgeInsets.symmetric(horizontal: 24.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  const Text(
+                    'Welcome Back',
+                    style: TextStyle(
+                      fontSize: FontSize.large,
+                      fontWeight: FontWeight.bold,
+                      color: ColorPalette.neutralsWhite,
                     ),
                   ),
-                  child: const Text(
-                    'Login',
+                  const SizedBox(height: 16),
+                  const Text(
+                    'Please login to continue',
                     style: TextStyle(
                       fontSize: FontSize.regular,
-                      color: ColorPalette.black500,
+                      color: ColorPalette.neutralsWhite,
                     ),
                   ),
-                ),
-                const SizedBox(height: 50,),
-                TextButton(
-                  onPressed: () {
-                    Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(builder: (context) => const RegisterScreen()),
-                      (Route<dynamic> route) => false,
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(foregroundColor: ColorPalette.teal200),
-                  child: const Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "Don't have an account?",
-                        style: TextStyle(
-                          color: ColorPalette.neutralsWhite,
-                        ),
-                      ),
-                      Text(' Register now',
-                        style: TextStyle(
-                          fontSize: FontSize.small,
-                          color: ColorPalette.neutralsWhite,
-                          fontWeight: FontWeight.bold
-                        )
-                      )
-                    ],
+                  const SizedBox(height: 40),
+                  LoginInputsWidget(
+                    emailController: _emailController, 
+                    passwordController: _passwordController, 
+                    scrollUpOnInputTap: scrollUpOnInputTap
                   ),
-                ),
-              ],
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: () async {
+                      try {
+                          final MutationOptions options = MutationOptions(
+                            document: gql(loginMutation(_emailController.text, _passwordController.text)),
+                          );      
+                          final QueryResult queryResult = await client.value.mutate(options);
+                          if (queryResult.hasException) {
+                            log(queryResult.exception.toString());
+                              FlushBarService(fitToScreen: 1, duration: 4).showCustomSnackBar(context,
+                                queryResult.exception?.graphqlErrors.first.message ?? 'Unknown error', ColorPalette.errorColor, const Icon(Icons.error, color: Colors.white, size: FontSize.regular));
+                          } else {
+                            () async {
+                              SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeLeft,
+                                DeviceOrientation.landscapeRight, DeviceOrientation.portraitDown, DeviceOrientation.portraitUp
+                              ]);
+                              StorageService().saveToken(queryResult.data?['login']);
+                              log(queryResult.data?['login']);
+                              FlushBarService(fitToScreen: 1, duration: 4).showCustomSnackBar(
+                                context,
+                                'Login was successful!',
+                              ColorPalette.successColor, 
+                                const Icon(
+                                  Icons.error, 
+                                  color: Colors.white, 
+                                  size: FontSize.regular
+                                )
+                              );
+                              Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(builder: (context) => const NavbarScaffoldingScreen()),
+                                (Route<dynamic> route) => false,
+                              );
+                            }();
+                          }
+                        } catch (e) {
+                          log(e.toString());
+                        }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: ColorPalette.teal200,
+                      backgroundColor: ColorPalette.teal500,
+                      padding: const EdgeInsets.symmetric(horizontal: 100, vertical: 15),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20.0),
+                      ),
+                    ),
+                    child: const Text(
+                      'Login',
+                      style: TextStyle(
+                        fontSize: FontSize.regular,
+                        color: ColorPalette.black500,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 50,),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(builder: (context) => const RegisterScreen()),
+                        (Route<dynamic> route) => false,
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(foregroundColor: ColorPalette.teal200),
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Don't have an account?",
+                          style: TextStyle(
+                            color: ColorPalette.neutralsWhite,
+                          ),
+                        ),
+                        Text(' Register now',
+                          style: TextStyle(
+                            fontSize: FontSize.small,
+                            color: ColorPalette.neutralsWhite,
+                            fontWeight: FontWeight.bold
+                          )
+                        )
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

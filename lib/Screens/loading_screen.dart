@@ -29,7 +29,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
     if(!mounted) {
       return;
     }
-    if(token != null || token != '') {
+    if(token != null && token != '') {
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (context) => const NavbarScaffoldingScreen()),

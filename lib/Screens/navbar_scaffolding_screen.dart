@@ -50,7 +50,7 @@ class _NavbarScaffoldingScreenState extends State<NavbarScaffoldingScreen> {
           const PlaylistsTab(
           ),
           item: ItemConfig(
-            icon: const Icon(Icons.move_up),
+            icon: const Icon(Icons.playlist_play),
             title: "Playlists",
             activeForegroundColor: ColorPalette.teal800,
             activeColorSecondary: ColorPalette.teal800
@@ -133,7 +133,7 @@ Future<void> getUserCredentials() async {
 
   Future<Map<String, dynamic>> getCredentials(String token) async {
   try {
-    final HttpLink httpLink = HttpLink(ServerAddressEnum.LOCAL2.ipAddress);
+    final HttpLink httpLink = HttpLink(ServerAddressEnum.PUBLIC1.ipAddress);
     final authLink = AuthLink(
       getToken: () async => 'Bearer $token',
     );
@@ -176,7 +176,7 @@ Future<void> getUserCredentials() async {
     setState(() {
       SystemChrome.setSystemUIOverlayStyle(
         const SystemUiOverlayStyle(
-          systemNavigationBarColor: ColorPalette.black500,
+          systemNavigationBarColor: ColorPalette.black600,
           statusBarColor: ColorPalette.black500,
         )
       );

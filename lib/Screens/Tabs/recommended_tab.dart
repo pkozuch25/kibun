@@ -6,6 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:kibun/Logic/API/spotify_API.dart';
 import 'package:kibun/Logic/Services/genres_list.dart';
 import 'package:kibun/Logic/Services/spotify_auth_service.dart';
+import 'package:kibun/Logic/Services/storage_service.dart';
 import 'package:kibun/Logic/Services/style.dart';
 import 'package:kibun/Widgets/Screens/general_tab_widget.dart';
 import 'package:kibun/Widgets/background_widget.dart';
@@ -25,7 +26,7 @@ class _RecommendedTabState extends State<RecommendedTab> {
   bool showSearchBar = false;
   String? accessToken;
   final TextEditingController _searchController = TextEditingController();
-  String? searchText;
+  String? searchText, token;
   Color? color;
   final String assetName = 'assets/kibun_logo.svg';
 
@@ -36,7 +37,8 @@ class _RecommendedTabState extends State<RecommendedTab> {
   }
 
   Future<void> init() async {
-    await selectRandomColorFromStyles();
+    color = ColorPalette().getRandomColor();
+    await readToken();
     await refreshAccessToken();
     await fetchPage();
   }
@@ -45,8 +47,8 @@ class _RecommendedTabState extends State<RecommendedTab> {
     accessToken = await SpotifyAuthService().getAccessToken();
   }
 
-  Future<void> selectRandomColorFromStyles() async {
-    color = ColorPalette().getRandomColor();
+  Future<void> readToken() async {
+    token = await StorageService().readToken();
   }
 
   Future<void> fetchPage() async {
@@ -139,7 +141,7 @@ class _RecommendedTabState extends State<RecommendedTab> {
                                 () {
                                   if (_searchController.text != '') {
                                     () async {
-                                      selectRandomColorFromStyles();
+                                      color = ColorPalette().getRandomColor();
                                       result = await SpotifyApi().searchForTrack(accessToken!, _searchController.text, 50);
                                       if(!mounted) {
                                         return;
@@ -166,7 +168,7 @@ class _RecommendedTabState extends State<RecommendedTab> {
                               return;
                             }
                             setState(() {
-                              selectRandomColorFromStyles();
+                              color = ColorPalette().getRandomColor();
                               _shouldRefresh = true;
                             });
                             fetchPage();
@@ -196,7 +198,7 @@ class _RecommendedTabState extends State<RecommendedTab> {
                               return;
                             }
                             setState(() {
-                              selectRandomColorFromStyles();
+                              color = ColorPalette().getRandomColor();
                               _shouldRefresh = true;
                             });
                             fetchPage();
@@ -230,7 +232,8 @@ class _RecommendedTabState extends State<RecommendedTab> {
                           trackImageUrl: result[index]['trackImageUrl'],
                           songName: result[index]['songName'],
                           albumName: result[index]['albumName'],
-                          trackId: result[index]['trackId'],
+                          durationMs: result[index]['durationMs'],
+                          token: token.toString(),
                         );
                       },
                     ),
