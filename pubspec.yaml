@@ -18,11 +18,31 @@ dependencies:
   flutter_secure_storage: 9.2.2
   device_info_plus: 10.1.0
   another_flushbar: 1.12.30
+  audio_video_progress_bar: ^2.0.1
+  spotify: ^0.12.0
+  youtube_explode_dart: ^2.0.2
+  audioplayers: ^5.2.0
+  persistent_bottom_nav_bar_v2: 5.2.3
+  http: ^1.2.1
+  url_launcher: ^6.3.0
+  flutter_dotenv: ^5.1.0
+  flutter_svg: ^2.0.10+1
+  easy_debounce: 2.0.3  
+  overflow_text_animated: ^0.0.6
+  infinite_scroll_pagination: 4.0.0
+  flutter_staggered_grid_view: ^0.7.0
+  sliver_tools: ^0.2.12
+  dotted_border: 2.1.0
+  image_picker: 1.1.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^3.0.0
 
+
 flutter:
   uses-material-design: true
+  assets:
+    - .env
+    - ./assets/kibun_logo.svg

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kibun/Logic/Services/connectivity_controller.dart';
-import 'package:kibun/Widgets/Pages/no_internet_screen.dart';
+import 'package:kibun/Widgets/Screens/no_internet_screen.dart';
 
 class ConnectionAlert extends StatefulWidget {
   const ConnectionAlert({super.key});

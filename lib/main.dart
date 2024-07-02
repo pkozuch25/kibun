@@ -2,14 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:kibun/Logic/Services/style.dart';
 import 'package:kibun/Screens/InternetConnection/connection_alert.dart';
-import 'package:kibun/Screens/login_screen.dart';
+import 'package:kibun/Screens/loading_screen.dart';
 import 'package:kibun/ViewModels/email_validator_model.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-void main() {
+void main() async {
+  await dotenv.load(fileName: ".env");
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
-      systemNavigationBarColor: ColorPalette.black300
+      systemNavigationBarColor: ColorPalette.black600
     )
   );
   runApp(const MainApp());
@@ -63,9 +65,9 @@ class MainApp extends StatelessWidget {
               ),
             ),
             title: "Kibun",
-            initialRoute: '/Screens/login_screen',
+            initialRoute: '/Screens/loading_screen',
             routes: {
-              '/Screens/login_screen': (context) => const LoginScreen(),
+              '/Screens/loading_screen': (context) => const LoadingScreen(),
             }),
         ),
         const ConnectionAlert(),

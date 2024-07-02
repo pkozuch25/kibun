@@ -3,12 +3,14 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:kibun/Logic/Enums/server_address_enum.dart';
 import 'package:kibun/Logic/Services/style.dart';
 import 'package:kibun/Logic/Services/flushbar_service.dart';
 import 'package:kibun/Logic/Services/storage_service.dart';
 import 'package:kibun/Screens/login_screen.dart';
+import 'package:kibun/Screens/navbar_scaffolding_screen.dart';
 import 'package:kibun/Widgets/background_widget.dart';
 import 'package:kibun/Widgets/registration_inputs_widget.dart';
 
@@ -59,15 +61,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
-    setState(() {
-      SystemChrome.setSystemUIOverlayStyle(
-        const SystemUiOverlayStyle(
-          systemNavigationBarColor: ColorPalette.black300
-        )
-      );
-    });
-
-    final HttpLink httpLink = HttpLink(ServerAddressEnum.LOCAL2.ipAddress);
+    final Widget svg = SvgPicture.asset(
+      width: 150,
+      height: 150,
+      'assets/kibun_logo.svg',
+    );
+    final HttpLink httpLink = HttpLink(ServerAddressEnum.PUBLIC1.ipAddress);
     final ValueNotifier<GraphQLClient> client = ValueNotifier(
       GraphQLClient(
         link: httpLink,
@@ -91,7 +90,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     color: ColorPalette.neutralsWhite,
                   ),
                 ),
-                const SizedBox(height: 40),
+                const SizedBox(height: 20),
+                svg,
+                const SizedBox(height: 20),
                 RegistrationInputsWidget(
                   usernameController: _usernameController,
                   passwordController: _passwordController,
@@ -133,12 +134,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 size: FontSize.regular
                               )
                             );
-                            // przekierowanie na ekran główny
-                            // Navigator.pushAndRemoveUntil(
-                            //   context,
-                            //   MaterialPageRoute(builder: (context) => Home(name: credentials['name'], email: credentials['email'])),
-                            //   (Route<dynamic> route) => false,
-                            // );
+                            Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(builder: (context) => const NavbarScaffoldingScreen()),
+                              (Route<dynamic> route) => false,
+                            );
                           }();
                         }
                       } catch (e) {
